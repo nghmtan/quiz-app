@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 50px;
+  align-items: center;
+  color: white;
+}
+.score {
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+.actions {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+}

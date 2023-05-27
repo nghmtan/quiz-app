@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 80px;
+  font-weight: bolder;
+}
+.actions {
+  display: flex;
+  width: 450px;
+  justify-content: space-between;
+}
+
+.questionContainer {
+  margin: 30px 10px 20px 10px;
+  background-color: white;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 20px;
+  min-height: 200px;
+  box-shadow: 1px 1px 1px 1px rgba(121, 120, 120, 0.582);
+  border-radius: 7px;
+}

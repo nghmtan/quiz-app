@@ -1,0 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+.app-container {
+  background-color: #a5b4fc;
+  height: 100vh;
+}
+.h1-text {
+  color: white;
+}
