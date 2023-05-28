@@ -1,7 +1,12 @@
 import { FC } from 'react';
 import styles from './Endgame.module.css';
 import Button from '../../components/UI Components/Buttons/Button';
-const Endgame: FC = () => {
+
+interface endProps {
+  onReset: () => void;
+}
+const Endgame: FC<endProps> = (props) => {
+  const { onReset } = props;
   return (
     <div className={styles.container}>
       <p
@@ -16,6 +21,7 @@ const Endgame: FC = () => {
           textColor="white"
           backgroundColor=" #6ED5B7
         "
+          handleScreen={onReset}
           hoverColor="#2aba82"
           active={true}
         />
@@ -24,6 +30,7 @@ const Endgame: FC = () => {
           textColor="white"
           backgroundColor=" #EF4444
         "
+          handleScreen={onReset}
           hoverColor="#f46f73"
           active={true}
         />

@@ -6,6 +6,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   backgroundColor: string;
   hoverColor: string;
   active: boolean;
+  handleScreen: () => void;
 }
 const Button: FC<ButtonProps> = (props) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -16,7 +17,7 @@ const Button: FC<ButtonProps> = (props) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
-  const { text, textColor, backgroundColor, active, hoverColor } = props;
+  const { text, textColor, backgroundColor, active, hoverColor, handleScreen } = props;
   const buttonStyle = {
     color: textColor,
     backgroundColor: isHovered ? hoverColor : backgroundColor,
@@ -28,6 +29,7 @@ const Button: FC<ButtonProps> = (props) => {
       style={buttonStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onClick={handleScreen}
     >
       {text}
       {active && <span></span>}

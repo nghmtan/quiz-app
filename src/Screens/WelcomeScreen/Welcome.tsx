@@ -1,8 +1,13 @@
 import { FC, useState } from 'react';
 import Button from '../../components/UI Components/Buttons/Button';
 import styles from './Welcome.module.css';
+interface WelcomeProps {
+  onStart: () => void;
+}
 
-const Welcome: FC = () => {
+const Welcome: FC<WelcomeProps> = (props: WelcomeProps) => {
+  const { onStart } = props;
+  console.log(onStart);
   return (
     <div className={styles.container}>
       <h1 className={styles.h1}>Welcome to React Quiz Game!</h1>
@@ -12,6 +17,7 @@ const Welcome: FC = () => {
         active={true}
         hoverColor="#5aaf97"
         textColor="black"
+        handleScreen={onStart}
       />
     </div>
   );
