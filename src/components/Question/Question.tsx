@@ -1,15 +1,17 @@
 import { FC } from 'react';
 import styles from './Question.module.css';
-const Question: FC = () => {
+interface questionProps {
+  currentQuestion: number;
+  questionTitle: string;
+}
+const Question: FC<questionProps> = (props) => {
+  const { currentQuestion, questionTitle } = props;
   return (
     <div>
       <p className={styles.questionNum}>
-        Question <span style={{ fontWeight: 'bold' }}>1</span>/5
+        Question <span style={{ fontWeight: 'bold' }}>{currentQuestion + 1}</span>/5
       </p>
-      <h4>
-        Which of the following methods in a React Component should be overridden to stop the
-        component from updating?
-      </h4>
+      <h4>{questionTitle}</h4>
     </div>
   );
 };

@@ -11,3 +11,8 @@
 .btnstyle:hover {
   color: white !important;
 }
+.btnstyle:disabled,
+.btnstyle[disabled] {
+  background-color: rgba(229, 231, 235) !important;
+  color: #666666 !important;
+}

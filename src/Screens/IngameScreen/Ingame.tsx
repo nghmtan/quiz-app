@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import styles from './Ingame.module.css';
 import Button from '../../components/UI Components/Buttons/Button';
 import Question from '../../components/Question/Question';
@@ -7,8 +7,17 @@ import AnswerList from '../../components/Answers/AnswerList';
 interface ingameProps {
   onEnd: () => void;
 }
+interface Answer {
+  answer_content: string;
+  correct: boolean;
+}
+interface userAnswer {
+  questionId: number;
+  userAnswer: Answer;
+  selected: boolean;
+}
+
 const Ingame: FC<ingameProps> = (props) => {
-  const { onEnd } = props;
   const data = [
     {
       id: '1',
@@ -109,26 +118,35 @@ const Ingame: FC<ingameProps> = (props) => {
     },
   ];
 
+  const { onEnd } = props;
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNextQuestion = () => {
+    if (currentIndex < data.length - 1) setCurrentIndex((prevState) => prevState + 1);
+  };
+  const handlePrevQuestion = () => {
+    if (currentIndex > 0) setCurrentIndex((prevState) => prevState - 1);
+  };
   return (
     <div className={styles.container}>
       <div className={styles.actions}>
         <Button
-          handleScreen={onEnd}
+          handleScreen={handlePrevQuestion}
           text="Previous"
           textColor="white"
           backgroundColor=" #6B7280
         "
           hoverColor="#d1d5db"
-          active={true}
+          active={currentIndex === 0 ? false : true}
         />
         <Button
           text="Next"
           textColor="white"
           backgroundColor=" rgba(110,231,183,1)
         "
-          handleScreen={onEnd}
+          handleScreen={handleNextQuestion}
           hoverColor="#5aaf97"
-          active={true}
+          active={currentIndex === data.length - 1 ? false : true}
         />
         <Button
           text="Submit"
@@ -136,16 +154,18 @@ const Ingame: FC<ingameProps> = (props) => {
           backgroundColor=" #F59E0B
        "
           handleScreen={onEnd}
-          className={styles.ml}
           hoverColor="#f8bf37"
           active={true}
         />
       </div>
       <div className={styles.questionContainer}>
         <Timer />
-        <Question />
+        <Question
+          currentQuestion={currentIndex}
+          questionTitle={data[currentIndex].question_content}
+        />
       </div>
-      <AnswerList />
+      <AnswerList answers={data[currentIndex].answers} />
     </div>
   );
 };

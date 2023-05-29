@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, FC, useState } from 'react';
+import { ButtonHTMLAttributes, FC, useEffect, useState } from 'react';
 import styles from './Buttons.module.css';
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
@@ -17,22 +17,27 @@ const Button: FC<ButtonProps> = (props) => {
   const handleMouseLeave = () => {
     setIsHovered(false);
   };
+
   const { text, textColor, backgroundColor, active, hoverColor, handleScreen } = props;
   const buttonStyle = {
     color: textColor,
     backgroundColor: isHovered ? hoverColor : backgroundColor,
   };
-
+  useEffect(() => {
+    if (active) {
+      setIsHovered(false);
+    }
+  }, [active]);
   return (
     <button
       className={styles.btnstyle}
+      disabled={!active}
       style={buttonStyle}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleScreen}
     >
       {text}
-      {active && <span></span>}
     </button>
   );
 };
