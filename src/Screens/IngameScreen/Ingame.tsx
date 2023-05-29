@@ -6,6 +6,8 @@ import Timer from '../../components/UI Components/Timer/Timer';
 import AnswerList from '../../components/Answers/AnswerList';
 interface ingameProps {
   onEnd: () => void;
+  getResult: (result: number) => number;
+  getUserAnswer: (userAnswer: userAnswer[]) => void;
 }
 interface Answer {
   answer_content: string;
@@ -13,7 +15,7 @@ interface Answer {
 }
 interface userAnswer {
   questionId: number;
-  userAnswer: Answer;
+  answer_content: string;
   selected: boolean;
 }
 
@@ -118,15 +120,91 @@ const Ingame: FC<ingameProps> = (props) => {
     },
   ];
 
-  const { onEnd } = props;
+  const { onEnd, getResult, getUserAnswer } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showSubmit, setShowSubmit] = useState(false);
+  const [userAnswer, setUserAnswer] = useState<userAnswer[]>([]);
 
   const handleNextQuestion = () => {
-    if (currentIndex < data.length - 1) setCurrentIndex((prevState) => prevState + 1);
+    const currentQuestionId = Number(data[currentIndex].id);
+    const hasAnswer = userAnswer.some((answer) => answer.questionId === currentQuestionId);
+    if (!hasAnswer) {
+      setUserAnswer((prevState) => [
+        ...prevState,
+        {
+          questionId: currentQuestionId,
+          answer_content: '',
+          selected: false,
+        },
+      ]);
+      if (currentQuestionId === 4) {
+        setUserAnswer((prevState) => [
+          ...prevState,
+
+          {
+            questionId: currentQuestionId + 1,
+            answer_content: '',
+            selected: false,
+          },
+        ]);
+      }
+    }
+
+    if (currentIndex < data.length - 1) {
+      setCurrentIndex((prevState) => prevState + 1);
+    }
+    if (currentIndex === data.length - 2) {
+      setShowSubmit(true);
+    }
+  };
+
+  const handleUserAnswer = (answer: userAnswer) => {
+    setUserAnswer((prevState) => {
+      const existingAnswerIndex = prevState.findIndex(
+        (item) => item.questionId === answer.questionId
+      );
+
+      if (existingAnswerIndex !== -1) {
+        // Update existing answer
+        const updatedAnswer = { ...prevState[existingAnswerIndex], ...answer };
+        return [
+          ...prevState.slice(0, existingAnswerIndex),
+          updatedAnswer,
+          ...prevState.slice(existingAnswerIndex + 1),
+        ];
+      } else {
+        // Add new answer
+        return [...prevState, answer];
+      }
+    });
   };
   const handlePrevQuestion = () => {
+    setShowSubmit(false);
     if (currentIndex > 0) setCurrentIndex((prevState) => prevState - 1);
   };
+
+  console.log(currentIndex);
+  const onSubmit = () => {
+    let count = 0;
+    for (let i = 0; i < data.length; i++) {
+      for (let k = 0; k < data[i].answers.length; k++) {
+        if (
+          data[i].answers[k].correct &&
+          data[i].answers[k].answer_content === userAnswer[i]?.answer_content
+        ) {
+          count++;
+        }
+      }
+    }
+    getResult(count);
+    const text = 'Do you want to submit answers ?';
+    if (confirm(text) == true) {
+      getUserAnswer(userAnswer);
+      onEnd();
+    }
+    console.log(count);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.actions}>
@@ -137,6 +215,7 @@ const Ingame: FC<ingameProps> = (props) => {
           backgroundColor=" #6B7280
         "
           hoverColor="#d1d5db"
+          show={true}
           active={currentIndex === 0 ? false : true}
         />
         <Button
@@ -144,6 +223,7 @@ const Ingame: FC<ingameProps> = (props) => {
           textColor="white"
           backgroundColor=" rgba(110,231,183,1)
         "
+          show={true}
           handleScreen={handleNextQuestion}
           hoverColor="#5aaf97"
           active={currentIndex === data.length - 1 ? false : true}
@@ -153,9 +233,10 @@ const Ingame: FC<ingameProps> = (props) => {
           textColor="white"
           backgroundColor=" #F59E0B
        "
-          handleScreen={onEnd}
+          handleScreen={onSubmit}
           hoverColor="#f8bf37"
           active={true}
+          show={showSubmit}
         />
       </div>
       <div className={styles.questionContainer}>
@@ -165,7 +246,12 @@ const Ingame: FC<ingameProps> = (props) => {
           questionTitle={data[currentIndex].question_content}
         />
       </div>
-      <AnswerList answers={data[currentIndex].answers} />
+      <AnswerList
+        answers={data[currentIndex].answers}
+        onChangeAnswer={handleUserAnswer}
+        userAnswer={userAnswer}
+        currentQuestion={Number(data[currentIndex].id)}
+      />
     </div>
   );
 };

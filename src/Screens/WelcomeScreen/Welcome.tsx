@@ -18,6 +18,7 @@ const Welcome: FC<WelcomeProps> = (props: WelcomeProps) => {
         hoverColor="#5aaf97"
         textColor="black"
         handleScreen={onStart}
+        show={true}
       />
     </div>
   );
