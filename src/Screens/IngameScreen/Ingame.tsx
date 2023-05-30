@@ -119,7 +119,9 @@ const Ingame: FC<ingameProps> = (props) => {
       ],
     },
   ];
-  const [time, setTime] = useState(90);
+
+  const totalTime = 90;
+  const [remainingTime, setRemainingTime] = useState(totalTime);
   const { onEnd, getResult, getUserAnswer } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showSubmit, setShowSubmit] = useState(false);
@@ -184,7 +186,7 @@ const Ingame: FC<ingameProps> = (props) => {
   };
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prevTime) => {
+      setRemainingTime((prevTime) => {
         if (prevTime === 0) {
           clearInterval(interval);
           return 0;
@@ -198,7 +200,7 @@ const Ingame: FC<ingameProps> = (props) => {
     };
   }, []);
   useEffect(() => {
-    if (time === 0) {
+    if (remainingTime === 0) {
       let count = 0;
       for (let i = 0; i < data.length; i++) {
         for (let k = 0; k < data[i].answers.length; k++) {
@@ -217,9 +219,8 @@ const Ingame: FC<ingameProps> = (props) => {
         onEnd();
       }, 1000);
     }
-  }, [time]);
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
+  }, [remainingTime]);
+
   const onSubmit = () => {
     let count = 0;
     for (let i = 0; i < data.length; i++) {
@@ -278,9 +279,8 @@ const Ingame: FC<ingameProps> = (props) => {
       </div>
       <div className={styles.questionContainer}>
         <Timer
-          time={time}
-          minutes={minutes}
-          seconds={seconds}
+          time={totalTime}
+          remainingTime={remainingTime}
         />
         <Question
           currentQuestion={currentIndex}
