@@ -119,7 +119,7 @@ const Ingame: FC<ingameProps> = (props) => {
       ],
     },
   ];
-
+  const [time, setTime] = useState(90);
   const { onEnd, getResult, getUserAnswer } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showSubmit, setShowSubmit] = useState(false);
@@ -182,8 +182,44 @@ const Ingame: FC<ingameProps> = (props) => {
     setShowSubmit(false);
     if (currentIndex > 0) setCurrentIndex((prevState) => prevState - 1);
   };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime === 0) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
 
-  console.log(currentIndex);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+  useEffect(() => {
+    if (time === 0) {
+      let count = 0;
+      for (let i = 0; i < data.length; i++) {
+        for (let k = 0; k < data[i].answers.length; k++) {
+          if (
+            data[i].answers[k].correct &&
+            data[i].answers[k].answer_content === userAnswer[i]?.answer_content
+          ) {
+            count++;
+          }
+        }
+      }
+
+      getResult(count);
+      getUserAnswer(userAnswer);
+      setTimeout(() => {
+        onEnd();
+      }, 1000);
+    }
+  }, [time]);
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
   const onSubmit = () => {
     let count = 0;
     for (let i = 0; i < data.length; i++) {
@@ -196,6 +232,7 @@ const Ingame: FC<ingameProps> = (props) => {
         }
       }
     }
+
     getResult(count);
     const text = 'Do you want to submit answers ?';
     if (confirm(text) == true) {
@@ -240,7 +277,11 @@ const Ingame: FC<ingameProps> = (props) => {
         />
       </div>
       <div className={styles.questionContainer}>
-        <Timer />
+        <Timer
+          time={time}
+          minutes={minutes}
+          seconds={seconds}
+        />
         <Question
           currentQuestion={currentIndex}
           questionTitle={data[currentIndex].question_content}
@@ -250,6 +291,7 @@ const Ingame: FC<ingameProps> = (props) => {
         answers={data[currentIndex].answers}
         onChangeAnswer={handleUserAnswer}
         userAnswer={userAnswer}
+        answerStatus={true}
         currentQuestion={Number(data[currentIndex].id)}
       />
     </div>

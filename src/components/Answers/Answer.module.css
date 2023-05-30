@@ -11,8 +11,16 @@
   margin: 10px 0;
   cursor: pointer;
 }
-.container:hover,
+.hoverable:hover,
 .selected {
   background-color: #312e81;
+  color: white;
+}
+.correct {
+  background-color: #10b981;
+  color: white;
+}
+.wrong {
+  background-color: #ef4444;
   color: white;
 }

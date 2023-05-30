@@ -113,6 +113,7 @@ const Review: FC<reviewProps> = (props) => {
       ],
     },
   ];
+  const answerStatus = false;
   const { onReset, userAnswer } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
   const handleNextQuestion = () => {
@@ -126,7 +127,6 @@ const Review: FC<reviewProps> = (props) => {
   const handlePrevQuestion = () => {
     if (currentIndex > 0) setCurrentIndex((prevState) => prevState - 1);
   };
-  console.log(userAnswer);
   return (
     <div className={styles.container}>
       <div className={styles.actions}>
@@ -162,7 +162,7 @@ const Review: FC<reviewProps> = (props) => {
         />
       </div>
       <div className={styles.questionContainer}>
-        <Timer />
+        <Timer status="End!" />
         <Question
           currentQuestion={currentIndex}
           questionTitle={data[currentIndex].question_content}
@@ -173,7 +173,7 @@ const Review: FC<reviewProps> = (props) => {
         userAnswer={userAnswer}
         currentQuestion={Number(data[currentIndex].id)}
         onChangeAnswer={voidFunction}
-        
+        answerStatus={answerStatus}
       />
     </div>
   );
