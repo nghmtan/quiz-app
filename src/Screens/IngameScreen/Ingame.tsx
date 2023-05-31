@@ -159,7 +159,7 @@ const Ingame: FC<ingameProps> = (props) => {
       setShowSubmit(true);
     }
   };
-
+  const [checkContinue, setContinue] = useState(false);
   const handleUserAnswer = (answer: userAnswer) => {
     setUserAnswer((prevState) => {
       const existingAnswerIndex = prevState.findIndex(
@@ -184,6 +184,7 @@ const Ingame: FC<ingameProps> = (props) => {
     setShowSubmit(false);
     if (currentIndex > 0) setCurrentIndex((prevState) => prevState - 1);
   };
+  let stop: number;
   useEffect(() => {
     const interval = setInterval(() => {
       setRemainingTime((prevTime) => {
@@ -235,12 +236,19 @@ const Ingame: FC<ingameProps> = (props) => {
     }
 
     getResult(count);
+    stop = Date.now();
     const text = 'Do you want to submit answers ?';
     if (confirm(text) == true) {
       getUserAnswer(userAnswer);
       onEnd();
+    } else {
+      stop = Date.now() - stop;
+      if (remainingTime - Math.floor(stop / 1000) < 0) {
+        setRemainingTime(0);
+      } else {
+        setRemainingTime((prevState) => prevState - Math.floor(stop / 1000));
+      }
     }
-    console.log(count);
   };
 
   return (

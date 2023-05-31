@@ -30,7 +30,7 @@ const Timer: FC<timerProps> = (props) => {
             strokeWidth="7"
             strokeLinecap="round"
             strokeDasharray={2 * Math.PI * 40}
-            strokeDashoffset={calculateStrokeDashoffset()}
+            strokeDashoffset={status ? '0' : calculateStrokeDashoffset()}
             fill="white"
           />
         </svg>
@@ -38,9 +38,9 @@ const Timer: FC<timerProps> = (props) => {
           {status ? (
             'End!'
           ) : (
-            <div style={{ color }}>
+            <span style={{ color }}>
               {minutes > 10 ? minutes : `0${minutes}`}:{seconds < 10 ? `0${seconds}` : seconds}
-            </div>
+            </span>
           )}
         </p>
       </div>
